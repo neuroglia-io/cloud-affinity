@@ -1,0 +1,141 @@
+﻿apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: correlations.cloud-affinity.io
+spec:
+  scope: Cluster
+  group: cloud-affinity.io
+  names:
+    plural: correlations
+    singular: correlation
+    kind: Correlation
+    shortNames:
+    - corel
+    - crl
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            description: An object used to configure the desired state of a correlation
+            properties:
+              occurence:
+                type: object
+                description: An object used to configure the correlation's occurence
+                properties:
+                  mode:
+                    type: string
+                    description: A value that configures how the correlation can occur
+                    enum: [ single, multiple ]
+                  limit:
+                    type: integer
+                    description: The maximum number of occurences before fulfilling the correlation, if any
+                    minimum: 1
+                  parallelism:
+                    type: integer
+                    description: The  degree of parallelism of occurences, if any, for the configured correlation
+                    minimum: 1
+                required: [ mode ]
+              fulfillmentCondition:
+                type: string
+                description: A value that specifies the condition based on which to determine the phase of defined correlations
+                enum: [ all, any ]
+              criteria:
+                type: array
+                description: A list containing the correlation's criteria
+                minItems: 1
+                items:
+                  type: object
+                  description: An object used to configure a criterion that must be fulfilled by cloud events to correlate
+                  properties:
+                    name:
+                      type: string
+                      description: The name that uniquely identifies the criterion with the correlation it belongs to
+                    fulfillmentCondition:
+                      type: string
+                      description: A value that specifies the condition based on which to determine if the criterion has been fulfilled
+                      enum: [ all, any ]
+                    rules:
+                      type: array
+                      description: A list containing the rules the criterion is made out of and which needs to be met for the criterion to be fulfilled
+                      minItems: 1
+                      items:
+                        type: object
+                        description: An object used to configure a rule of a correlation criterion
+                        properties:
+                          name:
+                            type: string
+                            description: The name that uniquely identifies the rule with the criterion it belongs to
+                          correlation:
+                            type: object
+                            description: An object used to configure how to correlate filtered cloud events
+                            properties:
+                              keys:
+                                type: array
+                                description: A list containing the definition of the correlation keys to use to correlate filtered cloud events
+                                minItems: 1
+                                items:
+                                  type: object
+                                  description: An object used to define a correlation key
+                                  properties:
+                                    name:
+                                      type: string
+                                      description: The name of the defined correlation key
+                                    valueFrom:
+                                      type: object
+                                      description: An object used to define how to resolve the value of a defined correlation key
+                                      properties:
+                                        contextAttribute:
+                                          type: string
+                                          description: The name of the cloud event context attribute to extract the correlation key value from
+                                        expression:
+                                          type: string
+                                          description: The runtime expression used to resolve the correlation key value of processed cloud events
+                                  required: [ name, valueFrom ]
+                                condition:
+                                  type: string
+                                  description: runtime expression, if any, used to determine whether or not to correlate a cloud event against an occurence
+                            required: [ keys ]
+                          filter:
+                            type: object
+                            description: An object used to configure the events the rule applies to, if any
+                            properties:
+                              attributes:
+                                type: array
+                                description: A list containing the context attributes to filter cloud events by
+                                items:
+                                  type: object
+                                  description: An object used to filter a specific cloud event based on a specific context attribute
+                                  properties:
+                                    name:
+                                      type: string
+                                    pattern:
+                                      type: string
+                                  required: [ name ]
+                              expression:
+                                type: string
+                          deduplication:
+                            type: object
+                            description: An object used to configure the cloud event deduplication strategy to use, if any
+                            properties:
+                              strategy:
+                                type: string
+                                description: The deduplication strategy to use
+                                enum: [ overwrite, throttle ]
+                              rollingDuration:
+                                type: string
+                                description: The rolling duration to wait for accepting new duplicate cloud events
+                        required: [ name, correlation ]
+                  required: [ name, fulfillmentCondition, rules ]
+            required: [ occurence, fulfillmentCondition, criteria ]
+          status:
+            type: object
+        required:
+        - spec
+    subresources:
+      status: {}

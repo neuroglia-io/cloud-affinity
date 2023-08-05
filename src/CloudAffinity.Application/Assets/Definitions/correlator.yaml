@@ -1,0 +1,30 @@
+﻿apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: correlators.cloud-affinity.io
+spec:
+  scope: Cluster
+  group: cloud-affinity.io
+  names:
+    plural: correlators
+    singular: correlator
+    kind: Correlator
+    shortNames:
+    - corelr
+    - crltr
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+            status:
+              type: object
+          required:
+            - spec
+      subresources:
+        status: {}

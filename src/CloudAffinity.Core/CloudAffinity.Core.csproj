@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+ <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Core", ""))</RootNamespace>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<VersionPrefix>0.7.4</VersionPrefix>
+	<AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+	<FileVersion>$(VersionPrefix)</FileVersion>
+	<NeutralLanguage>en</NeutralLanguage>
+	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	<Copyright>Copyright © 2023-Present The Hylo Authors. All rights reserved.</Copyright>
+	<PackageProjectUrl>https://github.com/neuroglia-io/hylo</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/neuroglia-io/hylo</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Title>$(AssemblyName)</Title>
+	<Description>Contains Hylo fundamentals, such as core resources and services</Description>
+	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hylo.Core" Version="0.7.5" />
+  </ItemGroup>
+
+</Project>

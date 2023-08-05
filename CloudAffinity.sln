@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudAffinity.Core", "src\CloudAffinity.Core\CloudAffinity.Core.csproj", "{9C1F2854-CC0D-44B5-B655-21132BAF3F8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudAffinity.Infrastructure", "src\CloudAffinity.Infrastructure\CloudAffinity.Infrastructure.csproj", "{114FC665-B6B1-463C-ACF6-D79E78A1729F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudAffinity.Application", "src\CloudAffinity.Application\CloudAffinity.Application.csproj", "{C889EBBB-9C59-4B24-8C6D-5FE1F042ECDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudAffinity.Server", "src\CloudAffinity.Server\CloudAffinity.Server.csproj", "{0EEEE8D1-105F-4332-91AD-B3586EACFC00}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A5F6C7CC-A8AE-4960-AA68-477DA3DF0B42}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7678AEF2-3714-45C3-B7BA-4FC0B6FA4A0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudAffinity.UnitTests", "tests\CloudAffinity.UnitTests\CloudAffinity.UnitTests.csproj", "{C98600A8-BA12-4C1A-80AB-7E52F765908F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C1F2854-CC0D-44B5-B655-21132BAF3F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1F2854-CC0D-44B5-B655-21132BAF3F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1F2854-CC0D-44B5-B655-21132BAF3F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1F2854-CC0D-44B5-B655-21132BAF3F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{114FC665-B6B1-463C-ACF6-D79E78A1729F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{114FC665-B6B1-463C-ACF6-D79E78A1729F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{114FC665-B6B1-463C-ACF6-D79E78A1729F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{114FC665-B6B1-463C-ACF6-D79E78A1729F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C889EBBB-9C59-4B24-8C6D-5FE1F042ECDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C889EBBB-9C59-4B24-8C6D-5FE1F042ECDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C889EBBB-9C59-4B24-8C6D-5FE1F042ECDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C889EBBB-9C59-4B24-8C6D-5FE1F042ECDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EEEE8D1-105F-4332-91AD-B3586EACFC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EEEE8D1-105F-4332-91AD-B3586EACFC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EEEE8D1-105F-4332-91AD-B3586EACFC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EEEE8D1-105F-4332-91AD-B3586EACFC00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C98600A8-BA12-4C1A-80AB-7E52F765908F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C98600A8-BA12-4C1A-80AB-7E52F765908F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C98600A8-BA12-4C1A-80AB-7E52F765908F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C98600A8-BA12-4C1A-80AB-7E52F765908F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9C1F2854-CC0D-44B5-B655-21132BAF3F8E} = {A5F6C7CC-A8AE-4960-AA68-477DA3DF0B42}
+		{114FC665-B6B1-463C-ACF6-D79E78A1729F} = {A5F6C7CC-A8AE-4960-AA68-477DA3DF0B42}
+		{C889EBBB-9C59-4B24-8C6D-5FE1F042ECDF} = {A5F6C7CC-A8AE-4960-AA68-477DA3DF0B42}
+		{0EEEE8D1-105F-4332-91AD-B3586EACFC00} = {A5F6C7CC-A8AE-4960-AA68-477DA3DF0B42}
+		{C98600A8-BA12-4C1A-80AB-7E52F765908F} = {7678AEF2-3714-45C3-B7BA-4FC0B6FA4A0A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B816D751-798A-4599-9062-D419F6EDCB4C}
+	EndGlobalSection
+EndGlobal
