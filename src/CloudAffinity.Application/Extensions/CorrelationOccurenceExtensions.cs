@@ -16,7 +16,7 @@ public static class CorrelationContextExtensions
     {
         return criterion.FulfillmentCondition switch
         {
-            FulfillmentCondition.Any => occurence.Events.Any(e => e.CriterionName == criterion.Name),
+            FulfillmentCondition.Any or FulfillmentCondition.Single => occurence.Events.Any(e => e.CriterionName == criterion.Name),
             FulfillmentCondition.All => criterion.Rules.All(r => occurence.Events.Any(e => e.CriterionName == criterion.Name && e.CriterionRuleName == r.Name)),
             _ => false
         };
@@ -32,7 +32,7 @@ public static class CorrelationContextExtensions
     {
         var fulfills = correlation.Spec.FulfillmentCondition switch
         {
-            FulfillmentCondition.Any => correlation.Spec.Criteria.Any(occurence.Fulfills),
+            FulfillmentCondition.Any or FulfillmentCondition.Single  => correlation.Spec.Criteria.Any(occurence.Fulfills),
             FulfillmentCondition.All => correlation.Spec.Criteria.All(occurence.Fulfills),
             _ => false
         };
@@ -75,7 +75,7 @@ public static class CorrelationContextExtensions
             }
         }
 
-        if (occurence.Fulfills(criterion)) return CorrelationResult.Unrelated;
+        if (occurence.Fulfills(criterion) && (criterion.FulfillmentCondition != FulfillmentCondition.Any || (criterion.FulfillmentCondition == FulfillmentCondition.Any && duplicateCloudEvent != null))) return CorrelationResult.Unrelated;
 
         foreach (var keyDefinition in criterionRule.Correlation.Keys)
         {

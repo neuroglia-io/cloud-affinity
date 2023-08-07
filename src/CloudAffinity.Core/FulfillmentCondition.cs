@@ -14,5 +14,9 @@ public static class FulfillmentCondition
     /// Indicates that any criterion/rule must be met to fulfill
     /// </summary>
     public const string Any = "any";
+    /// <summary>
+    /// Indicates that a single criterion/rule must be met to fulfill
+    /// </summary>
+    public const string Single = "single";
 
 }

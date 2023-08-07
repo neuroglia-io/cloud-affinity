@@ -170,14 +170,13 @@ public class CorrelationHandlerTests
         correlationCriteria.Last().Rules.First().Correlation.Condition = $$"""${ $OCCURENCE.events | last | .event.data.foo == "bar" }""";
         var correlation = new Correlation(new("fake-correlation"), new(new(CorrelationOccurenceMode.Single), FulfillmentCondition.All, correlationCriteria));
         this._toRemove.Add(correlation);
-        var cloudEventStream = this._serviceProvider.GetRequiredService<ICloudEventStream>();
         await this._repository.AddAsync(correlation).ConfigureAwait(false);
         await using var handler = ActivatorUtilities.CreateInstance<CorrelationHandler>(this._serviceProvider, correlation);
         await handler.InitializeAsync(default).ConfigureAwait(false);
 
         //act
-        await cloudEventStream.IngestAsync(event1).ConfigureAwait(false);
-        await cloudEventStream.IngestAsync(event2).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event1).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event2).ConfigureAwait(false);
         await Task.Delay(100);
         correlation = await this._repository.GetAsync<Correlation>(correlation.GetName()).ConfigureAwait(false);
 
@@ -193,7 +192,74 @@ public class CorrelationHandlerTests
     [Fact]
     public virtual async Task Correlate_MultipleEvents_WithMultipleOccurence_Should_Work()
     {
+        //arrange
+        var subject1 = Guid.NewGuid().ToShortString();
+        var subject2 = Guid.NewGuid().ToShortString();
+        var event1 = CloudEventFactory.Create(subject1);
+        var event2 = CloudEventFactory.Create(subject2);
+        var event3 = CloudEventFactory.Create(subject1);
+        var event4 = CloudEventFactory.Create(subject2);
+        var correlationCriteria = new CorrelationCriterion[]
+        {
+            CorrelationCriterionFactory.Create(FulfillmentCondition.All, event1, event3),
+            CorrelationCriterionFactory.Create(FulfillmentCondition.All, event2, event4)
+        };
+        var correlation = new Correlation(new("fake-correlation"), new(new(CorrelationOccurenceMode.Multiple), FulfillmentCondition.Any, correlationCriteria));
+        this._toRemove.Add(correlation);
+        await this._repository.AddAsync(correlation).ConfigureAwait(false);
+        await using var handler = ActivatorUtilities.CreateInstance<CorrelationHandler>(this._serviceProvider, correlation);
+        await handler.InitializeAsync(default).ConfigureAwait(false);
 
+        //act
+        await this._cloudEventStream.IngestAsync(event1).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event2).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event3).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event4).ConfigureAwait(false);
+        await Task.Delay(100);
+        correlation = await this._repository.GetAsync<Correlation>(correlation.GetName()).ConfigureAwait(false);
+
+        //assert
+        correlation.Should().NotBeNull();
+        correlation!.Status.Should().NotBeNull();
+        correlation!.Status!.Phase.Should().Be(CorrelationStatusPhase.Correlating);
+        correlation.Status!.Occurences.Should().HaveCount(2);
+        correlation.Status!.Occurences!.Should().AllSatisfy(o => o.Phase.Should().Be(CorrelationOccurenceStatusPhase.Fulfilled));
+        correlation.Status!.Occurences!.Should().AllSatisfy(o => o.Events.Should().HaveCount(2));
+    }
+
+    [Fact]
+    public virtual async Task Correlate_AllCriterion_WithAnyEvents_Should_Work()
+    {
+        //arrange
+        var subject = Guid.NewGuid().ToShortString();
+        var event1 = CloudEventFactory.Create(subject);
+        var event2 = CloudEventFactory.Create(subject);
+        var event3 = CloudEventFactory.Create(subject);
+        var correlationCriteria = new CorrelationCriterion[]
+        {
+            CorrelationCriterionFactory.Create(FulfillmentCondition.Any, event1, event2),
+            CorrelationCriterionFactory.Create(FulfillmentCondition.All, event3)
+        };
+        var correlation = new Correlation(new("fake-correlation"), new(new(CorrelationOccurenceMode.Single), FulfillmentCondition.All, correlationCriteria));
+        this._toRemove.Add(correlation);
+        await this._repository.AddAsync(correlation).ConfigureAwait(false);
+        await using var handler = ActivatorUtilities.CreateInstance<CorrelationHandler>(this._serviceProvider, correlation);
+        await handler.InitializeAsync(default).ConfigureAwait(false);
+
+        //act
+        await this._cloudEventStream.IngestAsync(event1).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event2).ConfigureAwait(false);
+        await this._cloudEventStream.IngestAsync(event3).ConfigureAwait(false);
+        await Task.Delay(100);
+        correlation = await this._repository.GetAsync<Correlation>(correlation.GetName()).ConfigureAwait(false);
+
+        //assert
+        correlation.Should().NotBeNull();
+        correlation!.Status.Should().NotBeNull();
+        correlation!.Status!.Phase.Should().Be(CorrelationStatusPhase.Fulfilled);
+        correlation.Status!.Occurences.Should().ContainSingle();
+        correlation.Status!.Occurences!.First().Phase.Should().Be(CorrelationOccurenceStatusPhase.Fulfilled);
+        correlation.Status!.Occurences!.First().Events.Should().HaveCount(3);
     }
 
     [Fact]
